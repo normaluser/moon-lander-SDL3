@@ -1,0 +1,10 @@
+{
+	"Parameter": {
+		"sound": 51,
+		"music": 30,
+		"fancy_Terrain": true,
+		"progressive_gravity": false,
+		"landing_pad_bonus": true,
+		"landing_pad_warn": false
+	}
+}
