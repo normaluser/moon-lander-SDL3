@@ -3,7 +3,7 @@
 ## a 2D game of gravity using SDL3 / Pascal
 
 This is my attempt to bring "moon lander" back to life.  
-This version of Moonlander is almost rewritten from scratch in SDL3.
+This version of Moonlander is almost rewritten from scratch, using Pascal and SDL3.
 
 # Dependencies
 
