@@ -177,7 +177,7 @@ begin
         playSound(SND_JETS);
 
       if (engine_on = 0) AND (engine_on_past = 1) then
-        stopSound(SND_JETS);
+        stopALLSound; {stopSound(SND_JETS);}
 
       engine_on_past := engine_on;
       if (game.opt_prog_grav) then game.gravity := game.gravity + (game.difficulty * difficu);

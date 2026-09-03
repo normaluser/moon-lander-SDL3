@@ -44,7 +44,7 @@ USES SDL3,
 procedure loadSounds;
 VAR i : Byte;
 begin
-  audiofname[SND_EAGLE_LANDED] := 'sounds/eagle_has_landed.wav';
+  audiofname[AUDIO_MUSIC]      := 'music/epic-cinematic-background-248926.ogg';
   audiofname[SND_EXPLOSION]    := 'sounds/explosion2.wav';
   audiofname[SND_JETS]         := 'sounds/jet_lp.wav';
   audiofname[SND_ON]           := 'sounds/Blaster_1.wav';
@@ -52,7 +52,7 @@ begin
   audiofname[SND_READY]        := 'sounds/beep1b.wav';
   audiofname[SND_GO]           := 'sounds/honk.wav';
   audiofname[SND_NEW_EAGLE]    := 'sounds/freesound_community-piglevelwin2mp3-14800.mp3';
-  audiofname[MAX_SOUND]        := 'music/epic-cinematic-background-248926.ogg';
+  audiofname[SND_EAGLE_LANDED] := 'sounds/eagle_has_landed.wav';
 
   if not MIX_Init then
   begin
@@ -60,60 +60,58 @@ begin
     Exit;
   end;
 
+  S_Mix[MIXER_]^.mixer := MIX_CreateMixerDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, nil);      { Mixer }
+  if S_Mix[MIXER_]^.mixer = nil then
+  begin
+    SDL_Log('Couldn''t create mixer: %s', SDL_GetError);
+    Halt(SDL_APP_FAILURE);
+  end;
+
   for i := 0 to max_Sound do
   begin
-    S_Mix[i]^.mixer := MIX_CreateMixerDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, nil);      // Mixer
-    if S_Mix[i]^.mixer = nil then
-    begin
-      SDL_Log('Couldn''t create mixer: %s', SDL_GetError);
-      Halt(SDL_APP_FAILURE);
-    end;
-
-    S_Mix[i]^.audio := MIX_LoadAudio(S_Mix[i]^.mixer, audiofname[i], True);
+    S_Mix[i]^.audio := MIX_LoadAudio(S_Mix[MIXER_]^.mixer, audiofname[i], True);
     if S_Mix[i]^.audio = nil then
     begin
       SDL_Log('Couldn''t load audio from %s: %s', audiofname[i], SDL_GetError);
       Halt(SDL_APP_FAILURE);
     end;
 
-    S_Mix[i]^.track := MIX_CreateTrack(S_Mix[i]^.mixer);
+    S_Mix[i]^.track := MIX_CreateTrack(S_Mix[MIXER_]^.mixer);
     if S_Mix[i]^.track = nil then
     begin
       SDL_Log('Couldn''t create track: %s', SDL_GetError);
       Halt(SDL_APP_FAILURE);
     end;
 
-    MIX_TagTrack(S_Mix[i]^.track ,'CH_ANY');
-
-    Mix_SetTrackGain(S_Mix[i]^.track, 0.95);                         // Sound volume
+    Mix_SetTrackGain(S_Mix[i]^.track, 0.95);                         { Sound volume }
 
     MIX_SetTrackAudio(S_Mix[i]^.track, S_Mix[i]^.audio);
   end;
 
   option := SDL_CreateProperties();
-  SDL_SetNumberProperty(option, MIX_PROP_PLAY_LOOPS_NUMBER, -1);     // Play sound in a loop
+  SDL_SetNumberProperty(option, MIX_PROP_PLAY_LOOPS_NUMBER, -1);     { Play music in a loop }
 
-  MIX_PlayTrack(S_Mix[MAX_SOUND]^.track, option);
-  Mix_SetTrackGain(S_Mix[MAX_SOUND]^.track, 1.0);                    // Music volume
+  MIX_PlayTrack(S_Mix[AUDIO_MUSIC]^.track, option);
+  Mix_SetTrackGain(S_Mix[AUDIO_MUSIC]^.track, 1.0);                  { Music volume }
 end;
 
 procedure playSound(id : Byte);
 begin
-  {if NOT MIX_TrackPlaying(S_Mix[id]^.track) then } MIX_PlayTrack(S_Mix[id]^.track, 0);
+  if NOT MIX_TrackPlaying(S_Mix[id]^.track) then  MIX_PlayTrack(S_Mix[id]^.track, 0);
 end;
 
 procedure stopSound(id : Byte);
 begin
-    if MIX_TrackPlaying(S_Mix[id]^.track) then
-      MIX_StopAllTracks(S_Mix[id]^.mixer, 0);       // works, because each sound has a mixer!! Stops ALL sound on the mixer!!
-end;                                                // funny part, there is only one sound at one mixer, aktually
+  if MIX_TrackPlaying(S_Mix[id]^.track) then
+    MIX_StopTrack(S_Mix[id]^.track, 0);               { Stops sound on the mixer!! }
+end;
 
 procedure stopALLSound;
 VAR i : Byte;
 begin
-  for i := 0 to PRED(max_Sound) do                 // don`t stop Background Music ! It would stop Backgroundmusic also
-    if MIX_TrackPlaying(S_Mix[i]^.track) then
-      MIX_StopAllTracks(S_Mix[i]^.mixer, 0);
+  for i := 1 to max_Sound do                          { don`t stop Background Music ! It would stop Backgroundmusic also }
+    if MIX_TrackPlaying(S_Mix[i]^.track) then         { starts with 1, because 0 == Music; 1..8 are sounds! }
+      MIX_StopTrack(S_Mix[i]^.track, 0);
 end;
 
 procedure init_Sounds;

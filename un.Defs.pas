@@ -59,7 +59,8 @@ CONST xSize      = 1280;
       Atlas_Path        = 'data/atlas.json';
       Texture_Path      = 'gfx/atlas.png';
 
-      SND_EAGLE_LANDED  = 0;     { eagle_has_landed.wav }
+      MIXER_            = 0;
+      AUDIO_MUSIC       = 0;
       SND_EXPLOSION     = 1;     { explosion2.wav       }
       SND_JETS          = 2;     { jet_lp.wav           }
       SND_ON            = 3;     { Blaster_1.wav        }
@@ -67,6 +68,7 @@ CONST xSize      = 1280;
       SND_READY         = 5;     { beep1b.wav           }
       SND_GO            = 6;     { honk                 }
       SND_NEW_EAGLE     = 7;     { space_bubbles_2.wav  }
+      SND_EAGLE_LANDED  = 8;     { eagle_has_landed.wav }
       MAX_SOUND         = 8;     { 8 Sounds with Music  }
 
       Magenta : TSDL_Color = ( r:255; g:  0; b:255; a:255 );

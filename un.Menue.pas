@@ -180,9 +180,9 @@ end;
 procedure sound;
 VAR i : byte;
 begin
-  for i := 0 to PRED(max_Sound) do                   { all channels without music }
+  for i := 1 to max_Sound do                         { all channels without music }
   begin
-    Mix_SetTrackGain(S_Mix[i]^.track,  ant[soun].w * 0.01);
+    Mix_SetTrackGain(S_Mix[i]^.track, ant[soun].w * 0.01);
     he[soun] := 'Sound volume: ' + IntToStr(ant[soun].w) + ' %';
     game.SoundVol := ant[soun].w;
   end;
@@ -190,7 +190,7 @@ end;
 
 procedure music;                                     { only music channel }
 begin
-  Mix_SetTrackGain(S_Mix[Max_Sound]^.track,  ant[musi].w * 0.01);
+  Mix_SetTrackGain(S_Mix[AUDIO_MUSIC]^.track, ant[musi].w * 0.01);
   he[musi] := 'Music volume: ' + IntToStr(ant[musi].w) + ' %';
   game.MusicVol := ant[musi].w;
 end;

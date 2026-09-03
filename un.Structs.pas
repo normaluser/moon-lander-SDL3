@@ -128,7 +128,6 @@ VAR app          : TApp;
     _right,
     _down,
     tick         : Integer;
-    CH_ANY       : PCHAR;
 
 // ******************** implementation ********************
 
